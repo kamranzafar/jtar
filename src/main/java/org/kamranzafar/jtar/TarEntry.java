@@ -126,7 +126,7 @@ public class TarEntry {
 	}
 
 	/**
-	 * Checks if the org.xeustechnologies.jtar entry is a directory
+	 * Checks if the org.kamrazafar.jtar entry is a directory
 	 * 
 	 * @return
 	 */
