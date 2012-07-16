@@ -28,10 +28,6 @@ import java.util.zip.GZIPInputStream;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import org.kamranzafar.jtar.TarEntry;
-import org.kamranzafar.jtar.TarInputStream;
-import org.kamranzafar.jtar.TarOutputStream;
-import org.kamranzafar.jtar.TarUtils;
 
 @RunWith(JUnit4.class)
 public class JTarTest {
@@ -44,18 +40,15 @@ public class JTarTest {
 	 */
 	@Test
 	public void tar() throws IOException {
-		FileOutputStream dest = new FileOutputStream("c:/tmp/tartest/test.tar");
-		TarOutputStream out = new TarOutputStream(
-				new BufferedOutputStream(dest));
+		FileOutputStream dest = new FileOutputStream("/home/kamran/tmp/tartest.tar");
+		TarOutputStream out = new TarOutputStream(new BufferedOutputStream(dest));
 
-		tarFolder(null, "c:/tmp/untartest", out);
+		tarFolder(null, "/home/kamran/tmp/tartest/", out);
 
 		out.close();
 
-		System.out.println("Calculated tar size: "
-				+ TarUtils.calculateTarSize(new File("c:/tmp/untartest")));
-		System.out.println("Actual tar size: "
-				+ new File("c:/tmp/tartest/test.tar").length());
+		System.out.println("Calculated tar size: " + TarUtils.calculateTarSize(new File("/home/kamran/tmp/tartest")));
+		System.out.println("Actual tar size: " + new File("/home/kamran/tmp/tartest.tar").length());
 	}
 
 	/**
@@ -65,11 +58,10 @@ public class JTarTest {
 	 */
 	@Test
 	public void untarTarFile() throws IOException {
-		String destFolder = "c:/tmp/untartest";
-		File zf = new File("c:/tmp/tartest/test.tar");
+		String destFolder = "/home/kamran/tmp/untartest";
+		File zf = new File("/home/kamran/tmp/tartest.tar");
 
-		TarInputStream tis = new TarInputStream(new BufferedInputStream(
-				new FileInputStream(zf)));
+		TarInputStream tis = new TarInputStream(new BufferedInputStream(new FileInputStream(zf)));
 
 		untar(tis, destFolder);
 
@@ -83,19 +75,17 @@ public class JTarTest {
 	 */
 	@Test
 	public void untarTGzFile() throws IOException {
-		String destFolder = "c:/tmp/untartest";
-		File zf = new File("c:/tmp/test.tar.gz");
+		String destFolder = "/home/kamran/tmp/untargztest";
+		File zf = new File("/home/kamran/tmp/tartest.tar.gz");
 
-		TarInputStream tis = new TarInputStream(new BufferedInputStream(
-				new GZIPInputStream(new FileInputStream(zf))));
+		TarInputStream tis = new TarInputStream(new BufferedInputStream(new GZIPInputStream(new FileInputStream(zf))));
 
 		untar(tis, destFolder);
 
 		tis.close();
 	}
 
-	private void untar(TarInputStream tis, String destFolder)
-			throws IOException {
+	private void untar(TarInputStream tis, String destFolder) throws IOException {
 		BufferedOutputStream dest = null;
 
 		TarEntry entry;
@@ -110,13 +100,11 @@ public class JTarTest {
 			} else {
 				int di = entry.getName().lastIndexOf('/');
 				if (di != -1) {
-					new File(destFolder + "/"
-							+ entry.getName().substring(0, di)).mkdirs();
+					new File(destFolder + "/" + entry.getName().substring(0, di)).mkdirs();
 				}
 			}
 
-			FileOutputStream fos = new FileOutputStream(destFolder + "/"
-					+ entry.getName());
+			FileOutputStream fos = new FileOutputStream(destFolder + "/" + entry.getName());
 			dest = new BufferedOutputStream(fos);
 
 			while ((count = tis.read(data)) != -1) {
@@ -128,8 +116,7 @@ public class JTarTest {
 		}
 	}
 
-	public void tarFolder(String parent, String path, TarOutputStream out)
-			throws IOException {
+	public void tarFolder(String parent, String path, TarOutputStream out) throws IOException {
 		BufferedInputStream origin = null;
 		File f = new File(path);
 		String files[] = f.list();
@@ -140,8 +127,7 @@ public class JTarTest {
 			files[0] = f.getName();
 		}
 
-		parent = ((parent == null) ? (f.isFile()) ? "" : f.getName() + "/"
-				: parent + f.getName() + "/");
+		parent = ((parent == null) ? (f.isFile()) ? "" : f.getName() + "/" : parent + f.getName() + "/");
 
 		for (int i = 0; i < files.length; i++) {
 			System.out.println("Adding: " + files[i]);
@@ -159,7 +145,6 @@ public class JTarTest {
 				} else {
 					TarEntry entry = new TarEntry(fe, parent + files[i] + "/");
 					out.putNextEntry(entry);
-					out.write(new byte[(int) entry.getSize()]);
 				}
 				continue;
 			}
@@ -171,10 +156,9 @@ public class JTarTest {
 			out.putNextEntry(entry);
 
 			int count;
-			int bc = 0;
+
 			while ((count = origin.read(data)) != -1) {
 				out.write(data, 0, count);
-				bc += count;
 			}
 
 			out.flush();
