@@ -4,7 +4,7 @@
 	<groupId>org.kamranzafar</groupId>
 	<artifactId>jtar</artifactId>
 	<name>JTar</name>
-	<version>2.0</version>
+	<version>2.0-SNAPSHOT</version>
 	<description>Java Tar API</description>
 	<parent>
 		<groupId>org.sonatype.oss</groupId>
@@ -35,14 +35,9 @@
 		<url>http://kamranzafar.org</url>
 	</organization>
 	<scm>
-		<connection>
-			scm:svn:https://jtar.googlecode.com/svn/trunk/jtar
-		</connection>
-		<developerConnection>
-			scm:svn:https://jtar.googlecode.com/svn/trunk/jtar
-		</developerConnection>
-		<url>https://jtar.googlecode.com/svn/trunk/jtar
-		</url>
+		<connection>scm:git:git@github.com:kamranzafar/jtar.git</connection>
+		<developerConnection>scm:git:git@github.com:kamranzafar/jtar.git</developerConnection>
+		<url>git@github.com:kamranzafar/jtar.git</url>
 	</scm>
 	<build>
 		<sourceDirectory>${basedir}/src/main/java
