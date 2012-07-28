@@ -144,7 +144,6 @@ public class TarInputStream extends FilterInputStream {
 		}
 
 		if (!eof) {
-			bytesRead += header.length;
 			currentEntry = new TarEntry(header);
 		}
 
@@ -162,11 +161,9 @@ public class TarInputStream extends FilterInputStream {
 				// Not fully read, skip rest of the bytes
 				long bs = 0;
 				while (bs < currentEntry.getSize() - currentFileSize) {
-					long res = skip(currentEntry.getSize() - currentFileSize
-							- bs);
+					long res = skip(currentEntry.getSize() - currentFileSize - bs);
 
-					if (res == 0
-							&& currentEntry.getSize() - currentFileSize > 0) {
+					if (res == 0 && currentEntry.getSize() - currentFileSize > 0) {
 						// I suspect file corruption
 						throw new IOException("Possible tar file corruption");
 					}
@@ -210,7 +207,10 @@ public class TarInputStream extends FilterInputStream {
 		if (defaultSkip) {
 			// use skip method of parent stream
 			// may not work if skip not implemented by parent
-			return super.skip(n);
+			long bs = super.skip(n);
+			bytesRead += bs;
+
+			return bs;
 		}
 
 		if (n <= 0) {
@@ -221,8 +221,7 @@ public class TarInputStream extends FilterInputStream {
 		byte[] sBuff = new byte[SKIP_BUFFER_SIZE];
 
 		while (left > 0) {
-			int res = read(sBuff, 0, (int) (left < SKIP_BUFFER_SIZE ? left
-					: SKIP_BUFFER_SIZE));
+			int res = read(sBuff, 0, (int) (left < SKIP_BUFFER_SIZE ? left : SKIP_BUFFER_SIZE));
 			if (res < 0) {
 				break;
 			}

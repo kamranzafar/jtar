@@ -62,6 +62,23 @@ public class JTarTest {
 		File zf = new File("/home/kamran/tmp/tartest.tar");
 
 		TarInputStream tis = new TarInputStream(new BufferedInputStream(new FileInputStream(zf)));
+		untar(tis, destFolder);
+
+		tis.close();
+	}
+
+	/**
+	 * Untar the tar file
+	 * 
+	 * @throws IOException
+	 */
+	@Test
+	public void untarTarFileDefaultSkip() throws IOException {
+		String destFolder = "/home/kamran/tmp/untartest/default";
+		File zf = new File("/home/kamran/tmp/tartest.tar");
+
+		TarInputStream tis = new TarInputStream(new BufferedInputStream(new FileInputStream(zf)));
+		tis.setDefaultSkip(true);
 
 		untar(tis, destFolder);
 
