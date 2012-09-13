@@ -59,9 +59,12 @@ Below are some examples of jtar
   
   tis.close();
 </code></pre>
-__Tip: Always use buffered streams with jtar to speed up IO.__
+
+___Tip: Always use buffered streams with jtar to speed up IO.___
 
 ## Examples and resources
 
 * See [JTarTest](https://github.com/kamranzafar/jtar/blob/master/src/test/java/org/kamranzafar/jtar/JTarTest.java) class, provided with the source, for more detailed examples.
 * Visit the wiki page for more details on [Tar format](http://en.wikipedia.org/wiki/Tar_%28file_format%29)
+
+__JTar is available in [Maven Central](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22org.kamranzafar%22%20a%3A%22jtar%22)__
