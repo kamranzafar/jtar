@@ -17,6 +17,8 @@
 
 package org.kamranzafar.jtar;
 
+import java.io.File;
+
 /**
  * Header
  * 
@@ -192,6 +194,80 @@ public class TarHeader {
         }
 
         return offset + length;
+    }
+
+    /**
+     * Creates a new header for a file entry.
+     * 
+     * This method is useful for creating entries that do not correspond to a
+     * file. 
+     * 
+     * @param fileName File name
+     * @param fileSize File size in bytes
+     * @param modTime Last modification time in numeric Unix time format
+     * 
+     * @return 
+     */
+    public static TarHeader createFileHeader(String fileName, long fileSize, long modTime) {
+        String name = fileName;
+        TarHeader header  = new TarHeader();
+        name = name.replace(File.separatorChar, '/');
+
+        if (name.startsWith("/"))
+            name = name.substring(1);
+
+        header.linkName = new StringBuffer("");
+
+        header.name = new StringBuffer(name);
+
+        header.mode = 0100644;
+        header.linkFlag = TarHeader.LF_NORMAL;
+        header.size = fileSize;
+
+        header.modTime = modTime;
+        header.checkSum = 0;
+        header.devMajor = 0;
+        header.devMinor = 0;
+        
+        return header;
+    }
+    
+    /**
+     * Creates a new header for a directory entry.
+     * 
+     * This method is useful for creating entries that do not correspond to
+     * a directory in the file system.
+     * 
+     * @param fileName Directory name
+     * @param modTime Last modification time in numeric Unix time format
+     * 
+     * @return 
+     */
+    public static TarHeader createDirHeader(String dirName, long modTime) {
+        String name = dirName;
+        TarHeader header  = new TarHeader();
+        name = name.replace(File.separatorChar, '/');
+
+        if (name.startsWith("/"))
+            name = name.substring(1);
+
+        header.linkName = new StringBuffer("");
+
+        header.name = new StringBuffer(name);
+
+        header.mode = 040755;
+        header.linkFlag = TarHeader.LF_DIR;
+        if (header.name.charAt(header.name.length() - 1) != '/') {
+            header.name.append("/");
+        }
+        header.size = 0;
+
+        header.modTime = modTime;
+        header.checkSum = 0;
+        header.devMajor = 0;
+        header.devMinor = 0;
+        
+        return header;
     }
 
 }
