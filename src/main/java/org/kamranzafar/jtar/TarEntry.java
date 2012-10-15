@@ -44,6 +44,22 @@ public class TarEntry {
 		this.parseTarHeader(headerBuf);
 	}
 
+	/**
+	 * Constructor to create an entry from an existing TarHeader object.
+	 * 
+	 * This method is useful to add new entries programmatically (e.g. for
+	 * adding files or directories that do not exist in the file system).
+	 * 
+	 * @param header
+	 * 
+	 * @see TarHeader#createFileHeader(String, long, long)
+	 * @see TarHeader#createDirHeader(String, long)
+	 */
+    public TarEntry(TarHeader header) {
+        this.file = null;
+        this.header = header;
+    }	
+	
 	public boolean equals(TarEntry it) {
 		return this.header.name.toString().equals(it.header.name.toString());
 	}

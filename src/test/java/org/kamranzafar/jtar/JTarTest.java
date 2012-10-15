@@ -28,6 +28,7 @@ import java.util.zip.GZIPInputStream;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import static org.junit.Assert.*;
 
 @RunWith(JUnit4.class)
 public class JTarTest {
@@ -182,5 +183,30 @@ public class JTarTest {
 
 			origin.close();
 		}
+	}
+	
+	@Test
+	public void fileEntry() throws IOException {
+	    
+	    String fileName = "file.txt";
+	    long fileSize = 14523;
+	    long modTime = System.currentTimeMillis() / 1000;
+	    
+	    // Create a header object and check the fields
+	    TarHeader fileHeader = TarHeader.createFileHeader(fileName, fileSize, modTime);
+	    assertEquals(fileName, fileHeader.name.toString());
+	    assertEquals(TarHeader.LF_NORMAL, fileHeader.linkFlag);
+	    assertEquals(fileSize, fileHeader.size);
+	    assertEquals(modTime, fileHeader.modTime);
+
+	    // Create an entry from the header
+	    TarEntry fileEntry = new TarEntry(fileHeader);
+	    assertEquals(fileName, fileEntry.getName());
+	    
+	    // Write the header into a buffer, create it back and compare them
+	    byte[] headerBuf = new byte[TarConstants.HEADER_BLOCK];
+	    fileEntry.writeEntryHeader( headerBuf );
+	    TarEntry createdEntry = new TarEntry(headerBuf);
+	    assertTrue(fileEntry.equals(createdEntry));
 	}
 }
