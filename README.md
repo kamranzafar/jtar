@@ -3,8 +3,7 @@ JTar is a simple Java Tar library, that provides an easy way to create and read 
 
 ## Usage
 JTar is available in maven central and can be added as a dependency in the maven project.
-<pre><code>
-  &lt;dependency&gt;
+<pre><code>  &lt;dependency&gt;
     &lt;groupId&gt;org.kamranzafar&lt;/groupId&gt;
     &lt;artifactId&gt;jtar&lt;/artifactId&gt;
     &lt;version&gt;2.0.1&lt;/version&gt;
@@ -14,8 +13,7 @@ JTar is available in maven central and can be added as a dependency in the maven
 Below are some examples of using jtar in applications
 
 ### Tar example - using TarOutputStream
-<pre><code>
-  // Output file stream
+<pre><code>  // Output file stream
   FileOutputStream dest = new FileOutputStream( "c:/test/test.tar" );
   
   // Create a TarOutputStream
@@ -44,8 +42,7 @@ Below are some examples of using jtar in applications
 </code></pre>
 
 ### Untar example - using TarInputStream
-<pre><code>
-  String tarFile = "c:/test/test.tar";
+<pre><code>  String tarFile = "c:/test/test.tar";
   String destFolder = "c:/test/myfiles";
   
   // Create a TarInputStream
