@@ -216,10 +216,7 @@ public class TarHeader {
 	 */
 	public static TarHeader createHeader(String entryName, long size, long modTime, boolean dir) {
 		String name = entryName;
-		name = name.replace(File.separatorChar, '/');
-
-		if (name.startsWith("/"))
-			name = name.substring(1);
+		name = TarUtils.trim(name.replace(File.separatorChar, '/'), '/');
 
 		TarHeader header = new TarHeader();
 		header.linkName = new StringBuffer("");
