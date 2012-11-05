@@ -97,21 +97,13 @@ public class TarHeader {
 	 * Ustar header
 	 */
 
-	public static final int MAGICLEN = 8;
-	/**
-	 * The magic tag representing a POSIX tar archive.
-	 */
-	public static final String TMAGIC = "ustar";
+	public static final String USTAR_MAGIC = "ustar"; // POSIX
 
-	/**
-	 * The magic tag representing a GNU tar archive.
-	 */
-	public static final String GNU_TMAGIC = "ustar  ";
-
-	public static final int UNAMELEN = 32;
-	public static final int GNAMELEN = 32;
-	public static final int DEVLEN = 8;
-	public static final int FILENAME_PREFIX = 155;
+	public static final int USTAR_MAGICLEN = 8;
+	public static final int USTAR_USER_NAMELEN = 32;
+	public static final int USTAR_GROUP_NAMELEN = 32;
+	public static final int USTAR_DEVLEN = 8;
+	public static final int USTAR_FILENAME_PREFIX = 155;
 
 	// Header values
 	public StringBuffer name;
@@ -131,7 +123,7 @@ public class TarHeader {
 	public StringBuffer namePrefix;
 
 	public TarHeader() {
-		this.magic = new StringBuffer(TarHeader.TMAGIC);
+		this.magic = new StringBuffer(TarHeader.USTAR_MAGIC);
 
 		this.name = new StringBuffer();
 		this.linkName = new StringBuffer();

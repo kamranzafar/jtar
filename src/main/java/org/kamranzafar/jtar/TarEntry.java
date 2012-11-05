@@ -214,12 +214,12 @@ public class TarEntry {
 		outbuf[offset++] = header.linkFlag;
 
 		offset = TarHeader.getNameBytes(header.linkName, outbuf, offset, TarHeader.NAMELEN);
-		offset = TarHeader.getNameBytes(header.magic, outbuf, offset, TarHeader.MAGICLEN);
-		offset = TarHeader.getNameBytes(header.userName, outbuf, offset, TarHeader.UNAMELEN);
-		offset = TarHeader.getNameBytes(header.groupName, outbuf, offset, TarHeader.GNAMELEN);
-		offset = Octal.getOctalBytes(header.devMajor, outbuf, offset, TarHeader.DEVLEN);
-		offset = Octal.getOctalBytes(header.devMinor, outbuf, offset, TarHeader.DEVLEN);
-		offset = TarHeader.getNameBytes(header.namePrefix, outbuf, offset, TarHeader.FILENAME_PREFIX);
+		offset = TarHeader.getNameBytes(header.magic, outbuf, offset, TarHeader.USTAR_MAGICLEN);
+		offset = TarHeader.getNameBytes(header.userName, outbuf, offset, TarHeader.USTAR_USER_NAMELEN);
+		offset = TarHeader.getNameBytes(header.groupName, outbuf, offset, TarHeader.USTAR_GROUP_NAMELEN);
+		offset = Octal.getOctalBytes(header.devMajor, outbuf, offset, TarHeader.USTAR_DEVLEN);
+		offset = Octal.getOctalBytes(header.devMinor, outbuf, offset, TarHeader.USTAR_DEVLEN);
+		offset = TarHeader.getNameBytes(header.namePrefix, outbuf, offset, TarHeader.USTAR_FILENAME_PREFIX);
 
 		for (; offset < outbuf.length;)
 			outbuf[offset++] = 0;
@@ -264,21 +264,21 @@ public class TarEntry {
 		header.linkName = TarHeader.parseName(bh, offset, TarHeader.NAMELEN);
 		offset += TarHeader.NAMELEN;
 
-		header.magic = TarHeader.parseName(bh, offset, TarHeader.MAGICLEN);
-		offset += TarHeader.MAGICLEN;
+		header.magic = TarHeader.parseName(bh, offset, TarHeader.USTAR_MAGICLEN);
+		offset += TarHeader.USTAR_MAGICLEN;
 
-		header.userName = TarHeader.parseName(bh, offset, TarHeader.UNAMELEN);
-		offset += TarHeader.UNAMELEN;
+		header.userName = TarHeader.parseName(bh, offset, TarHeader.USTAR_USER_NAMELEN);
+		offset += TarHeader.USTAR_USER_NAMELEN;
 
-		header.groupName = TarHeader.parseName(bh, offset, TarHeader.GNAMELEN);
-		offset += TarHeader.GNAMELEN;
+		header.groupName = TarHeader.parseName(bh, offset, TarHeader.USTAR_GROUP_NAMELEN);
+		offset += TarHeader.USTAR_GROUP_NAMELEN;
 
-		header.devMajor = (int) Octal.parseOctal(bh, offset, TarHeader.DEVLEN);
-		offset += TarHeader.DEVLEN;
+		header.devMajor = (int) Octal.parseOctal(bh, offset, TarHeader.USTAR_DEVLEN);
+		offset += TarHeader.USTAR_DEVLEN;
 
-		header.devMinor = (int) Octal.parseOctal(bh, offset, TarHeader.DEVLEN);
-		offset += TarHeader.DEVLEN;
+		header.devMinor = (int) Octal.parseOctal(bh, offset, TarHeader.USTAR_DEVLEN);
+		offset += TarHeader.USTAR_DEVLEN;
 
-		header.namePrefix = TarHeader.parseName(bh, offset, TarHeader.FILENAME_PREFIX);
+		header.namePrefix = TarHeader.parseName(bh, offset, TarHeader.USTAR_FILENAME_PREFIX);
 	}
 }
