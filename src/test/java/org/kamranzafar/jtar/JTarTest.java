@@ -184,29 +184,29 @@ public class JTarTest {
 			origin.close();
 		}
 	}
-	
+
 	@Test
 	public void fileEntry() throws IOException {
-	    
-	    String fileName = "file.txt";
-	    long fileSize = 14523;
-	    long modTime = System.currentTimeMillis() / 1000;
-	    
-	    // Create a header object and check the fields
-	    TarHeader fileHeader = TarHeader.createFileHeader(fileName, fileSize, modTime);
-	    assertEquals(fileName, fileHeader.name.toString());
-	    assertEquals(TarHeader.LF_NORMAL, fileHeader.linkFlag);
-	    assertEquals(fileSize, fileHeader.size);
-	    assertEquals(modTime, fileHeader.modTime);
 
-	    // Create an entry from the header
-	    TarEntry fileEntry = new TarEntry(fileHeader);
-	    assertEquals(fileName, fileEntry.getName());
-	    
-	    // Write the header into a buffer, create it back and compare them
-	    byte[] headerBuf = new byte[TarConstants.HEADER_BLOCK];
-	    fileEntry.writeEntryHeader( headerBuf );
-	    TarEntry createdEntry = new TarEntry(headerBuf);
-	    assertTrue(fileEntry.equals(createdEntry));
+		String fileName = "file.txt";
+		long fileSize = 14523;
+		long modTime = System.currentTimeMillis() / 1000;
+
+		// Create a header object and check the fields
+		TarHeader fileHeader = TarHeader.createHeader(fileName, fileSize, modTime, false);
+		assertEquals(fileName, fileHeader.name.toString());
+		assertEquals(TarHeader.LF_NORMAL, fileHeader.linkFlag);
+		assertEquals(fileSize, fileHeader.size);
+		assertEquals(modTime, fileHeader.modTime);
+
+		// Create an entry from the header
+		TarEntry fileEntry = new TarEntry(fileHeader);
+		assertEquals(fileName, fileEntry.getName());
+
+		// Write the header into a buffer, create it back and compare them
+		byte[] headerBuf = new byte[TarConstants.HEADER_BLOCK];
+		fileEntry.writeEntryHeader(headerBuf);
+		TarEntry createdEntry = new TarEntry(headerBuf);
+		assertTrue(fileEntry.equals(createdEntry));
 	}
 }
