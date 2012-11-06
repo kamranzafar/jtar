@@ -192,10 +192,8 @@ public class TarHeader {
 	}
 
 	/**
-	 * Creates a new header for a file entry.
+	 * Creates a new header for a file/directory entry.
 	 * 
-	 * This method is useful for creating entries that do not correspond to a
-	 * file.
 	 * 
 	 * @param name
 	 *            File name
@@ -203,6 +201,8 @@ public class TarHeader {
 	 *            File size in bytes
 	 * @param modTime
 	 *            Last modification time in numeric Unix time format
+	 * @param dir
+	 *            Is directory
 	 * 
 	 * @return
 	 */

@@ -1,12 +1,12 @@
 # Overview
-JTar is a simple Java Tar library, that provides an easy way to create and read tar files using IO streams. The API is very simple to use and similar to the java.util.zip package.
+JTar is a simple Java Tar library, that provides an easy way to create and read tar files using IO streams. The API is very simple to use and similar to the java.util.zip package and also __supports UStar format__.
 
 ## Usage
 JTar is available in maven central and can be added as a dependency in the maven project.
 <pre><code>  &lt;dependency&gt;
     &lt;groupId&gt;org.kamranzafar&lt;/groupId&gt;
     &lt;artifactId&gt;jtar&lt;/artifactId&gt;
-    &lt;version&gt;2.1&lt;/version&gt;
+    &lt;version&gt;2.2&lt;/version&gt;
   &lt;/dependency&gt;
 </code></pre>
 
