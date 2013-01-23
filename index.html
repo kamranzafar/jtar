@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="Jtar : JTar is a simple Java Tar library, that provides an easy way to create and read tar files using IO streams. The API is very simple to use and similar to the java.util.zip package. " />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Jtar</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/kamranzafar/jtar">View on GitHub</a>
+
+          <h1 id="project_title">Jtar</h1>
+          <h2 id="project_tagline">JTar is a simple Java Tar library, that provides an easy way to create and read tar files using IO streams. The API is very simple to use and similar to the java.util.zip package. </h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/kamranzafar/jtar/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/kamranzafar/jtar/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>Overview</h1>
+
+<p>JTar is a simple Java Tar library, that provides an easy way to create and read tar files using IO streams. The API is very simple to use and similar to the java.util.zip package and also <strong>supports UStar format</strong>.</p>
+
+<h2>Usage</h2>
+
+<p>JTar is available in maven central and can be added as a dependency in the maven project.</p>
+
+<pre><code>  &lt;dependency&gt;
+    &lt;groupId&gt;org.kamranzafar&lt;/groupId&gt;
+    &lt;artifactId&gt;jtar&lt;/artifactId&gt;
+    &lt;version&gt;2.2&lt;/version&gt;
+  &lt;/dependency&gt;
+</code></pre>
+
+<p>Below are some examples of using jtar in applications</p>
+
+<h3>Tar example - using TarOutputStream</h3>
+
+<pre><code>  // Output file stream
+  FileOutputStream dest = new FileOutputStream( "c:/test/test.tar" );
+  
+  // Create a TarOutputStream
+  TarOutputStream out = new TarOutputStream( new BufferedOutputStream( dest ) );
+  
+  // Files to tar
+  File[] filesToTar=new File[2];
+  filesToTar[0]=new File("c:/test/myfile1.txt");
+  filesToTar[1]=new File("c:/test/myfile2.txt");
+  
+  for(File f:filesToTar){
+     out.putNextEntry(new TarEntry(f, f.getName()));
+     BufferedInputStream origin = new BufferedInputStream(new FileInputStream( f ));
+     int count;
+     byte data[] = new byte[2048];
+  
+     while((count = origin.read(data)) != -1) {
+        out.write(data, 0, count);
+     }
+  
+     out.flush();
+     origin.close();
+  }
+  
+  out.close();
+</code></pre>
+
+<h3>Untar example - using TarInputStream</h3>
+
+<pre><code>  String tarFile = "c:/test/test.tar";
+  String destFolder = "c:/test/myfiles";
+  
+  // Create a TarInputStream
+  TarInputStream tis = new TarInputStream(new BufferedInputStream(new FileInputStream(tarFile)));
+  TarEntry entry;
+  
+  while((entry = tis.getNextEntry()) != null) {
+     int count;
+     byte data[] = new byte[2048];
+     FileOutputStream fos = new FileOutputStream(destFolder + "/" + entry.getName());
+     BufferedOutputStream dest = new BufferedOutputStream(fos);
+  
+     while((count = tis.read(data)) != -1) {
+        dest.write(data, 0, count);
+     }
+  
+     dest.flush();
+     dest.close();
+  }
+  
+  tis.close();
+</code></pre>
+
+<p><strong><em>Tip: Always use buffered streams with jtar to speed up IO.</em></strong></p>
+
+<h2>Examples and resources</h2>
+
+<ul>
+<li>See <a href="https://github.com/kamranzafar/jtar/blob/master/src/test/java/org/kamranzafar/jtar/JTarTest.java">JTarTest</a> class, provided with the source, for more detailed examples.</li>
+<li>Visit the wiki page for more details on <a href="http://en.wikipedia.org/wiki/Tar_%28file_format%29">Tar format</a>
+</li>
+</ul><p><strong>JTar is available in <a href="http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22org.kamranzafar%22%20a%3A%22jtar%22">Maven Central</a></strong></p>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Jtar maintained by <a href="https://github.com/kamranzafar">kamranzafar</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
