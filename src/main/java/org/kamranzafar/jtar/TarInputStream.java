@@ -73,7 +73,7 @@ public class TarInputStream extends FilterInputStream {
 		int res = this.read(buf, 0, 1);
 
 		if (res != -1) {
-			return buf[0];
+			return 0xFF & buf[0];
 		}
 
 		return res;
