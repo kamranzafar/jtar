@@ -17,6 +17,7 @@
 
 package org.kamranzafar.jtar;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -41,8 +42,7 @@ public class TarOutputStream extends OutputStream {
     }
 
 	public TarOutputStream(final File fout) throws FileNotFoundException {
-		// TODO: Wrap bufferedoutputstream
-		this.out = new FileOutputStream(fout);
+		this.out = new BufferedOutputStream(new FileOutputStream(fout));
 		bytesWritten = 0;
 		currentFileSize = 0;
 	}
@@ -57,8 +57,7 @@ public class TarOutputStream extends OutputStream {
 		if (append && fileSize > TarConstants.EOF_BLOCK) {
 			raf.seek(fileSize - TarConstants.EOF_BLOCK);
 		}
-		// TODO: Wrap bufferedoutputstream
-		out = new FileOutputStream(raf.getFD());
+		out = new BufferedOutputStream(new FileOutputStream(raf.getFD()));
 	}
 
     /**
