@@ -27,6 +27,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.io.UnsupportedEncodingException;
 import java.nio.file.Files;
 import java.util.zip.GZIPInputStream;
@@ -133,6 +134,31 @@ public class JTarTest {
 		assertFileContents(destFolder);
 	}
 
+
+	@Test
+	public void testOffset() throws IOException {
+		File destFolder = new File(dir, "untartest");
+		destFolder.mkdirs();
+
+		File zf = new File("src/test/resources/tartest.tar");
+
+		TarInputStream tis = new TarInputStream(new BufferedInputStream(new FileInputStream(zf)));
+		tis.getNextEntry();
+		assertEquals(TarConstants.HEADER_BLOCK, tis.getCurrentOffset());
+		tis.getNextEntry();
+		TarEntry entry = tis.getNextEntry(); 
+		// All of the files in the tartest.tar file are smaller than DATA_BLOCK
+		assertEquals(TarConstants.HEADER_BLOCK * 3 + TarConstants.DATA_BLOCK * 2, tis.getCurrentOffset());
+		tis.close();
+		
+		RandomAccessFile rif = new RandomAccessFile(zf, "r");
+		rif.seek(TarConstants.HEADER_BLOCK * 3 + TarConstants.DATA_BLOCK * 2);
+		byte[] data = new byte[(int)entry.getSize()];
+		rif.read(data);
+		assertEquals("gTzyuQjfhrnyX9cTBSy", new String(data, "UTF-8"));
+		rif.close();
+	}
+	
 	private void untar(TarInputStream tis, String destFolder) throws IOException {
 		BufferedOutputStream dest = null;
 
