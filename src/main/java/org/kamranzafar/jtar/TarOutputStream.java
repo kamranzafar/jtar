@@ -17,24 +17,49 @@
 
 package org.kamranzafar.jtar;
 
-import java.io.FilterOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.RandomAccessFile;
 
 /**
  * @author Kamran Zafar
  * 
  */
-public class TarOutputStream extends FilterOutputStream {
+public class TarOutputStream extends OutputStream {
+	private final OutputStream out;
     private long bytesWritten;
     private long currentFileSize;
     private TarEntry currentEntry;
 
     public TarOutputStream(OutputStream out) {
-        super( out );
+        this.out = out;
         bytesWritten = 0;
         currentFileSize = 0;
     }
+
+	public TarOutputStream(final File fout) throws FileNotFoundException {
+		// TODO: Wrap bufferedoutputstream
+		this.out = new FileOutputStream(fout);
+		bytesWritten = 0;
+		currentFileSize = 0;
+	}
+
+	/**
+	 * Opens a file for writing. 
+	 */
+	public TarOutputStream(final File fout, final boolean append) throws IOException {
+		@SuppressWarnings("resource")
+		RandomAccessFile raf = new RandomAccessFile(fout, "rw");
+		final long fileSize = fout.length();
+		if (append && fileSize > TarConstants.EOF_BLOCK) {
+			raf.seek(fileSize - TarConstants.EOF_BLOCK);
+		}
+		// TODO: Wrap bufferedoutputstream
+		out = new FileOutputStream(raf.getFD());
+	}
 
     /**
      * Appends the EOF record and closes the stream
@@ -45,9 +70,8 @@ public class TarOutputStream extends FilterOutputStream {
     public void close() throws IOException {
         closeCurrentEntry();
         write( new byte[TarConstants.EOF_BLOCK] );
-        super.close();
+        out.close();
     }
-
     /**
      * Writes a byte to the stream and updates byte counters
      * 
@@ -55,7 +79,7 @@ public class TarOutputStream extends FilterOutputStream {
      */
     @Override
     public void write(int b) throws IOException {
-        super.write( b );
+        out.write( b );
         bytesWritten += 1;
 
         if (currentEntry != null) {
@@ -78,7 +102,13 @@ public class TarOutputStream extends FilterOutputStream {
             }
         }
 
-        super.write( b, off, len );
+        out.write( b, off, len );
+        
+        bytesWritten += len;
+
+        if (currentEntry != null) {
+            currentFileSize += len;
+        }        
     }
 
     /**
