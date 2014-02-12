@@ -151,6 +151,14 @@ public class TarInputStream extends FilterInputStream {
 	}
 
 	/**
+	 * Returns the current offset (in bytes) from the beginning of the stream. 
+	 * This can be used to find out at which point in a tar file an entry's content begins, for instance. 
+	 */
+	public long getCurrentOffset() {
+		return bytesRead;
+	}
+	
+	/**
 	 * Closes the current tar entry
 	 * 
 	 * @throws IOException
