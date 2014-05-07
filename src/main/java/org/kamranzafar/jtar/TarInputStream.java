@@ -17,9 +17,7 @@
 
 package org.kamranzafar.jtar;
 
-import java.io.FilterInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 
 /**
  * @author Kamran Zafar
@@ -145,6 +143,7 @@ public class TarInputStream extends FilterInputStream {
 
 		if (!eof) {
 			currentEntry = new TarEntry(header);
+            readCurrentEntryIntoFile();
 		}
 
 		return currentEntry;
@@ -157,7 +156,35 @@ public class TarInputStream extends FilterInputStream {
 	public long getCurrentOffset() {
 		return bytesRead;
 	}
-	
+
+    /**
+     * Reads the contents of the current entry's file into a File object
+     * @throws IOException
+     */
+    protected void readCurrentEntryIntoFile() throws IOException {
+
+        //Create a spot on disk to store the data
+        File tempFile = File.createTempFile("jtar",".tmp");
+        tempFile.deleteOnExit();
+
+        int count;
+        byte data[] = new byte[2048];
+
+        try(FileOutputStream fos = new FileOutputStream(tempFile);
+            BufferedOutputStream dest = new BufferedOutputStream(fos)) {
+
+            while ((count = this.read(data,0,1)) != -1) {
+                dest.write(data, 0, count);
+            }
+
+            dest.flush();
+        }
+
+        if(currentEntry != null){
+            currentEntry.setFile(tempFile);
+        }
+    }
+
 	/**
 	 * Closes the current tar entry
 	 * 

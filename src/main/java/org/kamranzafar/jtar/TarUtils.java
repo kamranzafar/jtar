@@ -17,7 +17,9 @@
 
 package org.kamranzafar.jtar;
 
-import java.io.File;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Kamran
@@ -93,4 +95,22 @@ public class TarUtils {
 
 		return tmp.toString();
 	}
+
+    /**
+     * Returns a list of Files in a given tar archive.
+     *
+     * @param tarFile the tar archive File
+     * @return a list of Files in the tarFile parameter
+     * @throws IOException if there is an error reading the archive
+     */
+    public static List<TarEntry> getAllEntriesFromTar(File tarFile) throws IOException{
+        TarInputStream tis = new TarInputStream(new BufferedInputStream(new FileInputStream(tarFile)));
+        List<TarEntry> entries = new ArrayList<>();
+        TarEntry entry;
+        while((entry = tis.getNextEntry()) != null) {
+            entries.add(entry);
+        }
+
+        return entries;
+    }
 }

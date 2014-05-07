@@ -113,7 +113,8 @@ public class JTarAppendTest {
 				int count;
 				byte data[] = new byte[2048];
 				try (BufferedOutputStream dest = new BufferedOutputStream(new FileOutputStream(outDir + "/" + entry.getName()))) {
-					while ((count = in.read(data)) != -1) {
+					FileInputStream fis = new FileInputStream(entry.getFile());
+                    while ((count = fis.read(data)) != -1) {
 						dest.write(data, 0, count);
 					}
 				}

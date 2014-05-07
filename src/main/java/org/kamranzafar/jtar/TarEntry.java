@@ -136,6 +136,10 @@ public class TarEntry {
 		return this.file;
 	}
 
+    void setFile(File file){
+        this.file = file;
+    }
+
 	public long getSize() {
 		return header.size;
 	}
