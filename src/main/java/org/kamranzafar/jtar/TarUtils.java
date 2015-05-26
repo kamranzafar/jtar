@@ -26,9 +26,6 @@ import java.io.File;
 public class TarUtils {
 	/**
 	 * Determines the tar file size of the given folder/file path
-	 * 
-	 * @param path
-	 * @return
 	 */
 	public static long calculateTarSize(File path) {
 		return tarSize(path) + TarConstants.EOF_BLOCK;

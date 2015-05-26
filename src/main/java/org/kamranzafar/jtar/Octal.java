@@ -62,9 +62,10 @@ public class Octal {
     }
 
     /**
-     * Parse an octal integer from a header buffer.
+     * Write an octal integer to a header buffer.
      * 
      * @param value
+     *            The value to write.
      * @param buf
      *            The header buffer from which to parse.
      * @param offset
@@ -100,9 +101,10 @@ public class Octal {
     }
 
     /**
-     * Parse the checksum octal integer from a header buffer.
-     * 
+     * Write the checksum octal integer to a header buffer.
+     *
      * @param value
+     *            The value to write.
      * @param buf
      *            The header buffer from which to parse.
      * @param offset
@@ -119,9 +121,10 @@ public class Octal {
     }
 
     /**
-     * Parse an octal long integer from a header buffer.
+     * Write an octal long integer to a header buffer.
      * 
      * @param value
+     *            The value to write.
      * @param buf
      *            The header buffer from which to parse.
      * @param offset
