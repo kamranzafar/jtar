@@ -206,12 +206,13 @@ public class TarHeader {
 	 * 
 	 * @return
 	 */
-	public static TarHeader createHeader(String entryName, long size, long modTime, boolean dir) {
+	public static TarHeader createHeader(String entryName, long size, long modTime, boolean dir, int permissions) {
 		String name = entryName;
 		name = TarUtils.trim(name.replace(File.separatorChar, '/'), '/');
 
 		TarHeader header = new TarHeader();
 		header.linkName = new StringBuffer("");
+		header.mode = permissions;
 
 		if (name.length() > 100) {
 			header.namePrefix = new StringBuffer(name.substring(0, name.lastIndexOf('/')));
@@ -219,16 +220,13 @@ public class TarHeader {
 		} else {
 			header.name = new StringBuffer(name);
 		}
-
 		if (dir) {
-			header.mode = 040755;
 			header.linkFlag = TarHeader.LF_DIR;
 			if (header.name.charAt(header.name.length() - 1) != '/') {
 				header.name.append("/");
 			}
 			header.size = 0;
 		} else {
-			header.mode = 0100644;
 			header.linkFlag = TarHeader.LF_NORMAL;
 			header.size = size;
 		}

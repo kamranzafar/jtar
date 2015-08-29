@@ -170,7 +170,8 @@ public class TarEntry {
 	 * @param entryName
 	 */
 	public void extractTarHeader(String entryName) {
-		header = TarHeader.createHeader(entryName, file.length(), file.lastModified() / 1000, file.isDirectory());
+		int permissions = PermissionUtils.permissions(file);
+		header = TarHeader.createHeader(entryName, file.length(), file.lastModified() / 1000, file.isDirectory(), permissions);
 	}
 
 	/**
