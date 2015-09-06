@@ -245,13 +245,15 @@ public class JTarTest {
 		String fileName = "file.txt";
 		long fileSize = 14523;
 		long modTime = System.currentTimeMillis() / 1000;
+		int permissions = 0755;
 
 		// Create a header object and check the fields
-		TarHeader fileHeader = TarHeader.createHeader(fileName, fileSize, modTime, false);
+		TarHeader fileHeader = TarHeader.createHeader(fileName, fileSize, modTime, false, permissions);
 		assertEquals(fileName, fileHeader.name.toString());
 		assertEquals(TarHeader.LF_NORMAL, fileHeader.linkFlag);
 		assertEquals(fileSize, fileHeader.size);
 		assertEquals(modTime, fileHeader.modTime);
+		assertEquals(permissions, fileHeader.mode);
 
 		// Create an entry from the header
 		TarEntry fileEntry = new TarEntry(fileHeader);
