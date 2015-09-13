@@ -8,7 +8,7 @@ JTar is available in maven central and can be added as a dependency in the maven
 <pre><code>  &lt;dependency&gt;
     &lt;groupId&gt;org.kamranzafar&lt;/groupId&gt;
     &lt;artifactId&gt;jtar&lt;/artifactId&gt;
-    &lt;version&gt;2.2&lt;/version&gt;
+    &lt;version&gt;2.3&lt;/version&gt;
   &lt;/dependency&gt;
 </code></pre>
 
