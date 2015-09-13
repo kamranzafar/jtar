@@ -3,7 +3,7 @@
 	<groupId>org.kamranzafar</groupId>
 	<artifactId>jtar</artifactId>
 	<name>JTar</name>
-	<version>2.3-SNAPSHOT</version>
+	<version>2.3</version>
 	<description>Java Tar API</description>
 	
 	<parent>
