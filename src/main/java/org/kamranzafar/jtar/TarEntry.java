@@ -58,8 +58,18 @@ public class TarEntry {
 		this.header = header;
 	}
 
-	public boolean equals(TarEntry it) {
-		return header.name.toString().equals(it.header.name.toString());
+	@Override
+	public boolean equals(Object it) {
+		if (!(it instanceof TarEntry)) {
+			return false;
+		}
+		return header.name.toString().equals(
+				((TarEntry) it).header.name.toString());
+	}
+
+	@Override
+	public int hashCode() {
+		return header.name.hashCode();
 	}
 
 	public boolean isDescendent(TarEntry desc) {
