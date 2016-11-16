@@ -112,8 +112,7 @@ public class TarOutputStream extends OutputStream {
 
     /**
      * Writes the next tar entry header on the stream
-     * 
-     * @param entry
+     *
      * @throws IOException
      */
     public void putNextEntry(TarEntry entry) throws IOException {

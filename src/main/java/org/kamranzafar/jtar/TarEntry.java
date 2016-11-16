@@ -49,9 +49,6 @@ public class TarEntry {
 	 * 
 	 * This method is useful to add new entries programmatically (e.g. for
 	 * adding files or directories that do not exist in the file system).
-	 * 
-	 * @param header
-	 * 
 	 */
 	public TarEntry(TarHeader header) {
 		this.file = null;
@@ -156,8 +153,6 @@ public class TarEntry {
 
 	/**
 	 * Checks if the org.kamrazafar.jtar entry is a directory
-	 * 
-	 * @return
 	 */
 	public boolean isDirectory() {
 		if (this.file != null)
@@ -176,8 +171,6 @@ public class TarEntry {
 
 	/**
 	 * Extract header from File
-	 * 
-	 * @param entryName
 	 */
 	public void extractTarHeader(String entryName) {
 		int permissions = PermissionUtils.permissions(file);
@@ -186,9 +179,6 @@ public class TarEntry {
 
 	/**
 	 * Calculate checksum
-	 * 
-	 * @param buf
-	 * @return
 	 */
 	public long computeCheckSum(byte[] buf) {
 		long sum = 0;
@@ -202,8 +192,6 @@ public class TarEntry {
 
 	/**
 	 * Writes the header to the byte buffer
-	 * 
-	 * @param outbuf
 	 */
 	public void writeEntryHeader(byte[] outbuf) {
 		int offset = 0;
@@ -242,9 +230,6 @@ public class TarEntry {
 
 	/**
 	 * Parses the tar header to the byte buffer
-	 * 
-	 * @param header
-	 * @param bh
 	 */
 	public void parseTarHeader(byte[] bh) {
 		int offset = 0;
