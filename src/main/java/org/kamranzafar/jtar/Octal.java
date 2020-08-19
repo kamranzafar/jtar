@@ -94,7 +94,7 @@ public class Octal {
         }
 
         for (; idx >= 0; --idx) {
-            buf[offset + idx] = (byte) ' ';
+            buf[offset + idx] = (byte) '0';
         }
 
         return offset + length;
