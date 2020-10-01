@@ -162,8 +162,7 @@ public class TarEntry {
 			if (header.linkFlag == TarHeader.LF_DIR)
 				return true;
 
-			if (header.name.toString().endsWith("/"))
-				return true;
+			return header.name.toString().endsWith("/");
 		}
 
 		return false;
@@ -183,8 +182,8 @@ public class TarEntry {
 	public long computeCheckSum(byte[] buf) {
 		long sum = 0;
 
-		for (int i = 0; i < buf.length; ++i) {
-			sum += 255 & buf[i];
+		for (byte b : buf) {
+			sum += 255 & b;
 		}
 
 		return sum;
@@ -220,8 +219,9 @@ public class TarEntry {
 		offset = Octal.getOctalBytes(header.devMinor, outbuf, offset, TarHeader.USTAR_DEVLEN);
 		offset = TarHeader.getNameBytes(header.namePrefix, outbuf, offset, TarHeader.USTAR_FILENAME_PREFIX);
 
-		for (; offset < outbuf.length;)
+		while (offset < outbuf.length) {
 			outbuf[offset++] = 0;
+		}
 
 		long checkSum = this.computeCheckSum(outbuf);
 
