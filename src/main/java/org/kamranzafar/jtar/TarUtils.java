@@ -71,7 +71,7 @@ public class TarUtils {
 	}
 
 	public static String trim(String s, char c) {
-		StringBuffer tmp = new StringBuffer(s);
+		StringBuilder tmp = new StringBuilder(s);
 		for (int i = 0; i < tmp.length(); i++) {
 			if (tmp.charAt(i) != c) {
 				break;

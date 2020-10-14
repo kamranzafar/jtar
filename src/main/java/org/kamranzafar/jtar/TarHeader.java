@@ -106,7 +106,7 @@ public class TarHeader {
 	public static final int USTAR_FILENAME_PREFIX = 155;
 
 	// Header values
-	public StringBuffer name;
+	public StringBuilder name;
 	public int mode;
 	public int userId;
 	public int groupId;
@@ -114,19 +114,19 @@ public class TarHeader {
 	public long modTime;
 	public int checkSum;
 	public byte linkFlag;
-	public StringBuffer linkName;
-	public StringBuffer magic; // ustar indicator and version
-	public StringBuffer userName;
-	public StringBuffer groupName;
+	public StringBuilder linkName;
+	public StringBuilder magic; // ustar indicator and version
+	public StringBuilder userName;
+	public StringBuilder groupName;
 	public int devMajor;
 	public int devMinor;
-	public StringBuffer namePrefix;
+	public StringBuilder namePrefix;
 
 	public TarHeader() {
-		this.magic = new StringBuffer(TarHeader.USTAR_MAGIC);
+		this.magic = new StringBuilder(TarHeader.USTAR_MAGIC);
 
-		this.name = new StringBuffer();
-		this.linkName = new StringBuffer();
+		this.name = new StringBuilder();
+		this.linkName = new StringBuilder();
 
 		String user = System.getProperty("user.name", "");
 
@@ -135,9 +135,9 @@ public class TarHeader {
 
 		this.userId = 0;
 		this.groupId = 0;
-		this.userName = new StringBuffer(user);
-		this.groupName = new StringBuffer("");
-		this.namePrefix = new StringBuffer();
+		this.userName = new StringBuilder(user);
+		this.groupName = new StringBuilder("");
+		this.namePrefix = new StringBuilder();
 	}
 
 	/**
@@ -151,8 +151,8 @@ public class TarHeader {
 	 *            The number of header bytes to parse.
 	 * @return The header's entry name.
 	 */
-	public static StringBuffer parseName(byte[] header, int offset, int length) {
-		StringBuffer result = new StringBuffer(length);
+	public static StringBuilder parseName(byte[] header, int offset, int length) {
+		StringBuilder result = new StringBuilder(length);
 
 		int end = offset + length;
 		for (int i = offset; i < end; ++i) {
@@ -175,7 +175,7 @@ public class TarHeader {
 	 *            The number of header bytes to parse.
 	 * @return The number of bytes in a header's entry name.
 	 */
-	public static int getNameBytes(StringBuffer name, byte[] buf, int offset, int length) {
+	public static int getNameBytes(StringBuilder name, byte[] buf, int offset, int length) {
 		int i;
 
 		for (i = 0; i < length && i < name.length(); ++i) {
@@ -207,14 +207,14 @@ public class TarHeader {
 		name = TarUtils.trim(name.replace(File.separatorChar, '/'), '/');
 
 		TarHeader header = new TarHeader();
-		header.linkName = new StringBuffer("");
+		header.linkName = new StringBuilder("");
 		header.mode = permissions;
 
 		if (name.length() > 100) {
-			header.namePrefix = new StringBuffer(name.substring(0, name.lastIndexOf('/')));
-			header.name = new StringBuffer(name.substring(name.lastIndexOf('/') + 1));
+			header.namePrefix = new StringBuilder(name.substring(0, name.lastIndexOf('/')));
+			header.name = new StringBuilder(name.substring(name.lastIndexOf('/') + 1));
 		} else {
-			header.name = new StringBuffer(name);
+			header.name = new StringBuilder(name);
 		}
 		if (dir) {
 			header.linkFlag = TarHeader.LF_DIR;

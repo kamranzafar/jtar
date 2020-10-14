@@ -1,18 +1,18 @@
-/**
- * Copyright 2012 Kamran Zafar 
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); 
- * you may not use this file except in compliance with the License. 
- * You may obtain a copy of the License at 
- * 
- *      http://www.apache.org/licenses/LICENSE-2.0 
- * 
- * Unless required by applicable law or agreed to in writing, software 
- * distributed under the License is distributed on an "AS IS" BASIS, 
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
- * See the License for the specific language governing permissions and 
- * limitations under the License. 
- * 
+/*
+ * Copyright 2012 Kamran Zafar
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
  */
 
 package org.kamranzafar.jtar;
@@ -87,7 +87,7 @@ public class TarEntry {
 	}
 
 	public void setName(String name) {
-		header.name = new StringBuffer(name);
+		header.name = new StringBuilder(name);
 	}
 
 	public int getUserId() {
@@ -111,7 +111,7 @@ public class TarEntry {
 	}
 
 	public void setUserName(String userName) {
-		header.userName = new StringBuffer(userName);
+		header.userName = new StringBuilder(userName);
 	}
 
 	public String getGroupName() {
@@ -119,7 +119,7 @@ public class TarEntry {
 	}
 
 	public void setGroupName(String groupName) {
-		header.groupName = new StringBuffer(groupName);
+		header.groupName = new StringBuilder(groupName);
 	}
 
 	public void setIds(int userId, int groupId) {
@@ -162,8 +162,7 @@ public class TarEntry {
 			if (header.linkFlag == TarHeader.LF_DIR)
 				return true;
 
-			if (header.name.toString().endsWith("/"))
-				return true;
+			return header.name.toString().endsWith("/");
 		}
 
 		return false;
@@ -183,8 +182,8 @@ public class TarEntry {
 	public long computeCheckSum(byte[] buf) {
 		long sum = 0;
 
-		for (int i = 0; i < buf.length; ++i) {
-			sum += 255 & buf[i];
+		for (byte b : buf) {
+			sum += 255 & b;
 		}
 
 		return sum;
@@ -220,8 +219,9 @@ public class TarEntry {
 		offset = Octal.getOctalBytes(header.devMinor, outbuf, offset, TarHeader.USTAR_DEVLEN);
 		offset = TarHeader.getNameBytes(header.namePrefix, outbuf, offset, TarHeader.USTAR_FILENAME_PREFIX);
 
-		for (; offset < outbuf.length;)
+		while (offset < outbuf.length) {
 			outbuf[offset++] = 0;
+		}
 
 		long checkSum = this.computeCheckSum(outbuf);
 
