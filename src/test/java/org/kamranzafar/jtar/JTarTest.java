@@ -20,15 +20,7 @@ package org.kamranzafar.jtar;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.RandomAccessFile;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.nio.file.Files;
 import java.util.zip.GZIPInputStream;
 
@@ -37,6 +29,8 @@ import org.junit.Test;
 
 public class JTarTest {
 	static final int BUFFER = 2048;
+    private static final String FIRST_FILE_CONTENTS = "HPeX2kD5kSTc7pzCDX";
+    private static final String LAST_FILE_CONTENTS = "jrPYpzLfWB5vZTRsSKqFvVj";
 
 	private File dir;
 
@@ -59,12 +53,12 @@ public class JTarTest {
 		File tartest = new File(dir.getAbsolutePath(), "tartest");
 		tartest.mkdirs();
 
-		TestUtils.writeStringToFile("HPeX2kD5kSTc7pzCDX", new File(tartest, "one"));
+		TestUtils.writeStringToFile(FIRST_FILE_CONTENTS, new File(tartest, "one"));
 		TestUtils.writeStringToFile("gTzyuQjfhrnyX9cTBSy", new File(tartest, "two"));
 		TestUtils.writeStringToFile("KG889vdgjPHQXUEXCqrr", new File(tartest, "three"));
 		TestUtils.writeStringToFile("CNBDGjEJNYfms7rwxfkAJ", new File(tartest, "four"));
 		TestUtils.writeStringToFile("tT6mFKuLRjPmUDjcVTnjBL", new File(tartest, "five"));
-		TestUtils.writeStringToFile("jrPYpzLfWB5vZTRsSKqFvVj", new File(tartest, "six"));
+		TestUtils.writeStringToFile(LAST_FILE_CONTENTS, new File(tartest, "six"));
 
 		tarFolder(null, dir.getAbsolutePath() + "/tartest/", out);
 
@@ -115,6 +109,28 @@ public class JTarTest {
 
 	}
 
+    /**
+     * Untar the archive and verify that a File object is present for each entry
+     *
+     * @throws IOException
+     */
+    @Test
+    public void untarTarArchiveAndGetFiles() throws IOException {
+        File zf = new File("src/test/resources/tartest.tar");
+        TarInputStream tis = new TarInputStream(new BufferedInputStream(new FileInputStream(zf)));
+        TarEntry entry;
+        while((entry = tis.getNextEntry()) != null) {
+            //Verify that we have a File object
+            assertTrue(entry.getFile() != null);
+            try(FileInputStream fis = new FileInputStream(entry.getFile())){
+                //Verify there is data in the file object
+                assertTrue(fis.read() != -1);
+            }
+        }
+    }
+
+
+
 	/**
 	 * Untar the gzipped-tar file
 	 * 
@@ -144,11 +160,13 @@ public class JTarTest {
 
 		TarInputStream tis = new TarInputStream(new BufferedInputStream(new FileInputStream(zf)));
 		tis.getNextEntry();
-		assertEquals(TarConstants.HEADER_BLOCK, tis.getCurrentOffset());
+        //At this point we have read the header and one file
+		assertEquals(TarConstants.HEADER_BLOCK + LAST_FILE_CONTENTS.length(), tis.getCurrentOffset());
 		tis.getNextEntry();
 		TarEntry entry = tis.getNextEntry(); 
 		// All of the files in the tartest.tar file are smaller than DATA_BLOCK
-		assertEquals(TarConstants.HEADER_BLOCK * 3 + TarConstants.DATA_BLOCK * 2, tis.getCurrentOffset());
+		assertEquals(TarConstants.HEADER_BLOCK * 3 + TarConstants.DATA_BLOCK * 2 + FIRST_FILE_CONTENTS.length() + 1
+                , tis.getCurrentOffset());
 		tis.close();
 		
 		RandomAccessFile rif = new RandomAccessFile(zf, "r");
@@ -178,10 +196,11 @@ public class JTarTest {
 				}
 			}
 
+            FileInputStream fis = new FileInputStream(entry.getFile());
 			FileOutputStream fos = new FileOutputStream(destFolder + "/" + entry.getName());
 			dest = new BufferedOutputStream(fos);
 
-			while ((count = tis.read(data)) != -1) {
+			while ((count = fis.read(data)) != -1) {
 				dest.write(data, 0, count);
 			}
 
