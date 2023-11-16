@@ -1,6 +1,4 @@
 # Overview
-
-基于原版，修改了“TarHeader.java”以解决文件名含中文时的乱码问题。
 JTar is a simple Java Tar library, that provides an easy way to create and read tar files using IO streams. The API is very simple to use and similar to the _java.util.zip_ package and also __supports UStar format__.
 
 [![Build Status](https://travis-ci.org/kamranzafar/jtar.png?branch=master)](https://travis-ci.org/kamranzafar/jtar)
