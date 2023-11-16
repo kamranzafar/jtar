@@ -1,27 +1,29 @@
 /**
- * Copyright 2012 Kamran Zafar 
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); 
- * you may not use this file except in compliance with the License. 
- * You may obtain a copy of the License at 
- * 
- *      http://www.apache.org/licenses/LICENSE-2.0 
- * 
- * Unless required by applicable law or agreed to in writing, software 
- * distributed under the License is distributed on an "AS IS" BASIS, 
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
- * See the License for the specific language governing permissions and 
- * limitations under the License. 
- * 
+ * Copyright 2012 Kamran Zafar
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
  */
 
 package org.kamranzafar.jtar;
 
 import java.io.File;
+import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Header
- * 
+ *
  * <pre>
  * Offset  Size     Field
  * 0       100      File name
@@ -34,10 +36,10 @@ import java.io.File;
  * 156     1        Link indicator (file type)
  * 157     100      Name of linked file
  * </pre>
- * 
- * 
+ *
+ *
  * File Types
- * 
+ *
  * <pre>
  * Value        Meaning
  * '0'          Normal file
@@ -50,11 +52,11 @@ import java.io.File;
  * '6'          FIFO
  * '7'          Contigous
  * </pre>
- * 
- * 
- * 
+ *
+ *
+ *
  * Ustar header
- * 
+ *
  * <pre>
  * Offset  Size    Field
  * 257     6       UStar indicator "ustar"
@@ -142,7 +144,7 @@ public class TarHeader {
 
 	/**
 	 * Parse an entry name from a header buffer.
-	 * 
+	 *
 	 * @param header
 	 *            The header buffer from which to parse.
 	 * @param offset
@@ -152,21 +154,23 @@ public class TarHeader {
 	 * @return The header's entry name.
 	 */
 	public static StringBuffer parseName(byte[] header, int offset, int length) {
-		StringBuffer result = new StringBuffer(length);
+		int count = 0;
+		ByteBuffer byteBuffer = ByteBuffer.allocate(length);
 
 		int end = offset + length;
 		for (int i = offset; i < end; ++i) {
 			if (header[i] == 0)
 				break;
-			result.append((char) header[i]);
+			count++;
+			byteBuffer.put(header[i]);
 		}
 
-		return result;
+		return new StringBuffer(new String(byteBuffer.array(), 0, count, StandardCharsets.UTF_8));
 	}
 
 	/**
 	 * Determine the number of bytes in an entry name.
-	 * 
+	 *
 	 * @param name
 	 *            The header buffer from which to parse.
 	 * @param offset
@@ -176,10 +180,12 @@ public class TarHeader {
 	 * @return The number of bytes in a header's entry name.
 	 */
 	public static int getNameBytes(StringBuffer name, byte[] buf, int offset, int length) {
+		byte[] bytes = StandardCharsets.UTF_8.encode(name.toString()).array();
+
 		int i;
 
-		for (i = 0; i < length && i < name.length(); ++i) {
-			buf[offset + i] = (byte) name.charAt(i);
+		for (i = 0; i < length && i < bytes.length; ++i) {
+			buf[offset + i] = bytes[i];
 		}
 
 		for (; i < length; ++i) {
@@ -191,8 +197,8 @@ public class TarHeader {
 
 	/**
 	 * Creates a new header for a file/directory entry.
-	 * 
-	 * 
+	 *
+	 *
 	 * @param entryName
 	 *            File name
 	 * @param size

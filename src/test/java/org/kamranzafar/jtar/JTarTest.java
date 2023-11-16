@@ -1,18 +1,18 @@
 /**
- * Copyright 2012 Kamran Zafar 
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); 
- * you may not use this file except in compliance with the License. 
- * You may obtain a copy of the License at 
- * 
- *      http://www.apache.org/licenses/LICENSE-2.0 
- * 
- * Unless required by applicable law or agreed to in writing, software 
- * distributed under the License is distributed on an "AS IS" BASIS, 
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
- * See the License for the specific language governing permissions and 
- * limitations under the License. 
- * 
+ * Copyright 2012 Kamran Zafar
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
  */
 
 package org.kamranzafar.jtar;
@@ -44,11 +44,12 @@ public class JTarTest {
 	public void setup() throws IOException {
 		dir = Files.createTempDirectory("tartest").toFile();
 		dir.mkdirs();
+		System.out.println("Temp directory: " + dir);
 	}
 
 	/**
 	 * Tar the given folder
-	 * 
+	 *
 	 * @throws IOException
 	 */
 	@Test
@@ -65,6 +66,7 @@ public class JTarTest {
 		TestUtils.writeStringToFile("CNBDGjEJNYfms7rwxfkAJ", new File(tartest, "four"));
 		TestUtils.writeStringToFile("tT6mFKuLRjPmUDjcVTnjBL", new File(tartest, "five"));
 		TestUtils.writeStringToFile("jrPYpzLfWB5vZTRsSKqFvVj", new File(tartest, "six"));
+		TestUtils.writeStringToFile("中日韩文。CJK characters", new File(tartest, "CJK中日韩.txt"));
 
 		tarFolder(null, dir.getAbsolutePath() + "/tartest/", out);
 
@@ -75,7 +77,7 @@ public class JTarTest {
 
 	/**
 	 * Untar the tar file
-	 * 
+	 *
 	 * @throws IOException
 	 */
 	@Test
@@ -95,7 +97,7 @@ public class JTarTest {
 
 	/**
 	 * Untar the tar file
-	 * 
+	 *
 	 * @throws IOException
 	 */
 	@Test
@@ -117,7 +119,7 @@ public class JTarTest {
 
 	/**
 	 * Untar the gzipped-tar file
-	 * 
+	 *
 	 * @throws IOException
 	 */
 	@Test
@@ -146,11 +148,11 @@ public class JTarTest {
 		tis.getNextEntry();
 		assertEquals(TarConstants.HEADER_BLOCK, tis.getCurrentOffset());
 		tis.getNextEntry();
-		TarEntry entry = tis.getNextEntry(); 
+		TarEntry entry = tis.getNextEntry();
 		// All of the files in the tartest.tar file are smaller than DATA_BLOCK
 		assertEquals(TarConstants.HEADER_BLOCK * 3 + TarConstants.DATA_BLOCK * 2, tis.getCurrentOffset());
 		tis.close();
-		
+
 		RandomAccessFile rif = new RandomAccessFile(zf, "r");
 		rif.seek(TarConstants.HEADER_BLOCK * 3 + TarConstants.DATA_BLOCK * 2);
 		byte[] data = new byte[(int)entry.getSize()];
@@ -158,7 +160,7 @@ public class JTarTest {
 		assertEquals("gTzyuQjfhrnyX9cTBSy", new String(data, "UTF-8"));
 		rif.close();
 	}
-	
+
 	private void untar(TarInputStream tis, String destFolder) throws IOException {
 		BufferedOutputStream dest = null;
 
